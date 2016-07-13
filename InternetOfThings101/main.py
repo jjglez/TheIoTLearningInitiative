@@ -2,11 +2,19 @@
 
 import paho.mqtt.client as paho
 import psutil
+import pywapi
 import signal
 import sys
 import time
 
 from threading import Thread
+
+def functionApiWeather():
+    data = pywapi.get_weather_from_weather_com('MXJO0043', 'metric')
+    message = data['location']['name']
+    message = message + ", Temperature " + data['current_conditions']['temperature'] + " C"
+    message = message + ", Atmospheric Pressure " + data['current_conditions']['barometer']['reading'][:-3] + " mbar"
+    return message
 
 def functionDataActuator(status):
     print "Data Actuator Status %s" % status
@@ -57,6 +65,7 @@ if __name__ == '__main__':
     while True:
         print "Hello Internet of Things 101"
         print "Data Sensor: %s " % functionDataSensor()
+        print "API Weather: %s " % functionApiWeather()
         time.sleep(5)
 
 # End of File
